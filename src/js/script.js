@@ -4,6 +4,20 @@ const render = function(){
   for(const book of dataSource.books){
     const generatedHTML = template(book);
     const element = utils.createDOMFromHTML(generatedHTML);
+    //console.log(element.querySelector('.book__rating__fill'));
+    const ratingElem = element.querySelector('.book__rating__fill');
+    const ratingVal = Math.round(eval(ratingElem.innerHTML) * 100);
+    if(ratingVal <= 60)
+      ratingElem.style.background = 'linear-gradient(to bottom,  #fefcea 0%, #f1da36 100%)';
+    else if(ratingVal > 60 && ratingVal <= 80)
+      ratingElem.style.background = 'linear-gradient(to bottom, #b4df5b 0%,#b4df5b 100%)';
+    else if(ratingVal > 80 && ratingVal <= 90)
+      ratingElem.style.background = 'linear-gradient(to bottom, #299a0b 0%, #299a0b 100%)';
+    else if(ratingVal > 90 && ratingVal <= 100)
+      ratingElem.style.background = 'linear-gradient(to bottom, #ff0084 0%,#ff0084 100%)';
+
+    ratingElem.style.width = `${ratingVal}%`;
+    
     booksList.appendChild(element);
   }
 };
@@ -19,9 +33,9 @@ const filterBooks = function(){
     for(const bookLink of booksLinkArr){
       if(bookLink.getAttribute('data-id') == elemId){
         if(action === 'check')
-          bookLink.classList.add('hidden');
-        else if(action === 'uncheck')
           bookLink.classList.remove('hidden');
+        else if(action === 'uncheck')
+          bookLink.classList.add('hidden');
       }
     }
   };
@@ -37,6 +51,15 @@ const filterBooks = function(){
     }
   }
 }
+
+const initFilters = function(){
+  const filterInputs = document.querySelector('.filters').querySelectorAll('input[name="filter"]');
+  for(const input of filterInputs){
+    if(input.checked)
+      filters.push(input.value);
+  }
+};
+initFilters();
 
 const initActions = function(){
   const booksListElem = document.querySelector('.books-list');
